@@ -314,6 +314,22 @@ export default function Home() {
         </div>
 
         <div className="mt-3.5 rounded-xl border border-line bg-card px-5 py-4">
+          <h3 className="mb-1.5 text-base font-semibold">為什麼扣掉這些</h3>
+          <p className="text-[14.5px] text-ink-2">
+            平台手續費與各地稅金是 <strong className="text-ink">Apple 直接扣掉</strong>
+            的，不會進到我們手上 —— 這部分我們跟你一樣拿不到。
+          </p>
+          <p className="mt-2 text-[14.5px] text-ink-2">
+            剩下的部分我們還要負擔 App 開發、伺服器與內容製作成本。所以級距設計的用意是
+            —— <strong className="text-ink">你做得越多，拿的比例越高</strong>，一起把餅做大。
+          </p>
+          <p className="mt-2 text-[14.5px] text-ink-2">
+            每月回報都會列出<strong className="text-ink">銷售額、實收率、分潤基準</strong>
+            三個數字，你可以自己驗算。
+          </p>
+        </div>
+
+        <div className="mt-3.5 rounded-xl border border-line bg-card px-5 py-4">
           <h3 className="mb-1.5 text-base font-semibold">實收率會變動</h3>
           <p className="text-[14.5px] text-ink-2">
             實收率目前約 <strong className="text-ink">{netPercent}%</strong>
