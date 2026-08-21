@@ -1,0 +1,152 @@
+@import "tailwindcss";
+
+/*
+ * 設計 token —— 三種主題狀態都要覆蓋：
+ *   1. 裸 :root                          → 淺色（預設）
+ *   2. prefers-color-scheme: dark        → 系統深色（未指定 data-theme 時）
+ *   3. :root[data-theme="dark"]          → 明確選擇深色
+ * 顏色一律只在 token 層定義，元件只透過 var() 取用。
+ */
+:root {
+  --bg: #fbfaf7;
+  --card: #ffffff;
+  --sunk: #f2f0ea;
+  --ink: #1a1d22;
+  --ink-2: #565c66;
+  --ink-3: #8b929c;
+  --line: #e3e1da;
+  --line-2: #c9c6bc;
+  --brand: #1f6f5c;
+  --brand-2: #e7f1ed;
+  --alert: #a34434;
+  --alert-2: #fbeae6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121417;
+    --card: #1b1e22;
+    --sunk: #0e1013;
+    --ink: #edeeea;
+    --ink-2: #a6acb4;
+    --ink-3: #767d86;
+    --line: #2b2f35;
+    --line-2: #3e444b;
+    --brand: #6fc3a8;
+    --brand-2: #1a2e28;
+    --alert: #e89383;
+    --alert-2: #301d19;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #121417;
+  --card: #1b1e22;
+  --sunk: #0e1013;
+  --ink: #edeeea;
+  --ink-2: #a6acb4;
+  --ink-3: #767d86;
+  --line: #2b2f35;
+  --line-2: #3e444b;
+  --brand: #6fc3a8;
+  --brand-2: #1a2e28;
+  --alert: #e89383;
+  --alert-2: #301d19;
+}
+
+/* 讓 Tailwind 的 bg / text / border 工具類能吃到這些 token */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-card: var(--card);
+  --color-sunk: var(--sunk);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-brand: var(--brand);
+  --color-brand-2: var(--brand-2);
+  --color-alert: var(--alert);
+  --color-alert-2: var(--alert-2);
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Helvetica Neue", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  font-size: 16.5px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 合約區塊改用襯線體，與行銷內容區隔 */
+.contract-body {
+  font-family: "Times New Roman", "Songti TC", "PingFang TC", serif;
+}
+
+/* 手寫填寫用的底線 */
+.fill-line {
+  display: inline-block;
+  border-bottom: 1px solid var(--ink);
+  min-width: 175px;
+  height: 1.35em;
+  vertical-align: baseline;
+}
+.fill-line-sm {
+  min-width: 100px;
+}
+
+/* 簽名欄位的書寫線 */
+.sign-line {
+  border-bottom: 1px solid var(--ink);
+  height: 1.9em;
+}
+.sign-line-tall {
+  height: 3.1em;
+}
+
+/* Q&A 摺疊箭頭 */
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/*
+ * 列印：只輸出合約本體。
+ * data-print="hide" 標記所有行銷區塊；合約強制顯示並移除卡片外觀。
+ */
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 11.5pt;
+  }
+  [data-print="hide"] {
+    display: none !important;
+  }
+  [data-print="contract"] {
+    display: block !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #fff !important;
+  }
+  [data-print="avoid-break"] {
+    break-inside: avoid;
+  }
+  @page {
+    margin: 18mm 16mm;
+  }
+}
