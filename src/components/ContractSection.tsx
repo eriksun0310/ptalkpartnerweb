@@ -10,7 +10,7 @@ const STEPS = [
   },
   {
     title: '填寫並簽名',
-    body: '需要填的只有：你的全名簽署、簽署日期、合作起始日，以及收款帳戶資訊。',
+    body: '需要填的只有三項：你的全名簽署、簽署日期、合作起始日。收款帳戶另行提供給我們即可。',
   },
   {
     title: '拍照回傳',
@@ -355,26 +355,11 @@ export function ContractSection() {
 
           <div className="mt-4 border border-line-2 px-4 pt-3.5 pb-4" data-print="avoid-break">
             <p className="mb-3 border-b border-line pb-1.5 text-[10.5px] font-bold tracking-[0.12em] text-ink-3">
-              合作起始日 · 收款資訊（由乙方填寫）
+              合作起始日（由乙方填寫）
             </p>
-            <div className="grid grid-cols-1 gap-x-5 gap-y-3 sm:grid-cols-2">
-              <div>
-                <span className="mb-0.5 block text-[11.5px] text-ink-2">合作起始日</span>
-                <div className="sign-line" />
-                <p className="mt-1 text-[11px] text-ink-3">分潤自此日起之交易開始計算</p>
-              </div>
-              <div>
-                <span className="mb-0.5 block text-[11.5px] text-ink-2">帳戶戶名</span>
-                <div className="sign-line" />
-              </div>
-              <div>
-                <span className="mb-0.5 block text-[11.5px] text-ink-2">收款銀行 / 分行</span>
-                <div className="sign-line" />
-              </div>
-              <div>
-                <span className="mb-0.5 block text-[11.5px] text-ink-2">帳號</span>
-                <div className="sign-line" />
-              </div>
+            <div className="sm:max-w-xs">
+              <div className="sign-line" />
+              <p className="mt-1 text-[11px] text-ink-3">分潤自此日起之交易開始計算</p>
             </div>
           </div>
 
