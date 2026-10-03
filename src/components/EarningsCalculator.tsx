@@ -70,8 +70,8 @@ export function EarningsCalculator() {
             {result.share === 0
               ? '—'
               : result.payableThisMonth
-                ? '當月即可匯款'
-                : '未達 NT$1,000，累計至次月'}
+                ? '已達匯款門檻'
+                : '未達 NT$1,000，累計至下期'}
           </p>
         </div>
       </dl>
