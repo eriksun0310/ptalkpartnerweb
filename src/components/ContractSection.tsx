@@ -3,21 +3,6 @@
 import { useRef, useState } from 'react';
 import { TIER_ROWS, formatPercent } from '@/lib/tiers';
 
-const STEPS = [
-  {
-    title: '檢視並列印合約',
-    body: '點下方按鈕展開完整條款，用瀏覽器列印功能存成 PDF 或直接印出。',
-  },
-  {
-    title: '填寫並簽名',
-    body: '需要填的只有三項：你的全名簽署、簽署日期、合作起始日。收款帳戶另行提供給我們即可。',
-  },
-  {
-    title: '拍照回傳',
-    body: '簽好後拍照或掃描回傳給我們，我們會在 3 個工作日內建立你的專屬推廣連結。',
-  },
-] as const;
-
 /** 合約條文：以陣列描述，避免長段 JSX 難以維護 */
 const CLAUSES: ReadonlyArray<{
   heading: string;
@@ -162,24 +147,14 @@ export function ContractSection() {
   return (
     <section id="sign" className="border-t border-line py-11">
       <div data-print="hide">
-        <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-balance">準備開始合作</h2>
+        <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-balance">合作合約</h2>
         <p className="mb-5 max-w-[46ch] text-ink-2">
-          條件沒問題的話，接下來只要三個步驟。合約內容可以先在下方檢視，確認後列印簽名回傳給我們。
+          這就是
+          <a href="#join" className="font-semibold text-brand underline underline-offset-2">
+            加入步驟
+          </a>
+          第 1 步要簽的合約。可以先展開看完條款，確認沒問題再列印簽名，簽好後照第 2 步拍照傳給我們就可以了。
         </p>
-
-        <ol className="mb-6 flex flex-col gap-3">
-          {STEPS.map((s, i) => (
-            <li key={s.title} className="flex items-start gap-4">
-              <span className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-brand text-[13px] font-bold text-bg">
-                {i + 1}
-              </span>
-              <span>
-                <strong className="block text-base">{s.title}</strong>
-                <span className="text-[14.5px] text-ink-2">{s.body}</span>
-              </span>
-            </li>
-          ))}
-        </ol>
 
         <div className="flex flex-col gap-2.5 sm:flex-row">
           <button

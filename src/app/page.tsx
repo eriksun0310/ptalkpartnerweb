@@ -434,24 +434,66 @@ export default function Home() {
         data-print="hide"
       >
         <h2 className="mb-2 text-[26px]/snug font-bold tracking-tight text-balance">
-          想試試看嗎？跟我們說一聲就好
+          想試試看嗎？三個步驟就能開始
         </h2>
-        <p className="mb-6 max-w-[42ch] text-[15.5px] opacity-90">
-          告訴我們你想推哪款 App、平常在哪裡分享就好。合約就在
-          <a href="#sign" className="font-bold underline underline-offset-2">頁面最下方</a>
-          ，簽好拍照回傳後，3 個工作日內就會給你專屬連結。
+        <p className="mb-7 max-w-[42ch] text-[15.5px] opacity-90">
+          不用先面談，也不用等審核，照著下面做就可以了。
         </p>
-        <div className="flex flex-wrap items-start gap-3">
-          <EmailButton />
-          <a
-            href="https://www.threads.com/@ptalk.design"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full border-2 border-card/60 px-6 py-3 text-[15px] font-bold transition-colors hover:border-card focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-card"
-          >
-            Threads 私訊 @ptalk.design
-          </a>
-        </div>
+
+        <ol className="flex flex-col gap-6">
+          <li className="flex items-start gap-4">
+            <span className="grid size-8 shrink-0 place-items-center rounded-full bg-card text-[15px] font-bold text-brand">
+              1
+            </span>
+            <span>
+              <strong className="block text-[17px]">簽好合約</strong>
+              <span className="text-[14.5px] opacity-90">
+                合約在
+                <a href="#sign" className="font-bold underline underline-offset-2">
+                  頁面最下方
+                </a>
+                ，列印或存成 PDF 後，填上全名、簽署日期、合作起始日並簽名。
+              </span>
+            </span>
+          </li>
+          <li className="flex items-start gap-4">
+            <span className="grid size-8 shrink-0 place-items-center rounded-full bg-card text-[15px] font-bold text-brand">
+              2
+            </span>
+            <div className="min-w-0">
+              <strong className="block text-[17px]">拍照傳給我們</strong>
+              <span className="mb-3.5 block text-[14.5px] opacity-90">
+                附上你想推哪款 App、平常在哪裡分享，用下面任一種方式傳過來都可以。
+              </span>
+              <div className="flex flex-wrap items-start gap-3">
+                <EmailButton />
+                <a
+                  href="https://www.threads.com/@ptalk.design"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full border-2 border-card/60 px-6 py-3 whitespace-nowrap text-[15px] font-bold transition-colors hover:border-card focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-card"
+                >
+                  Threads 私訊 @ptalk.design
+                </a>
+              </div>
+            </div>
+          </li>
+          <li className="flex items-start gap-4">
+            <span className="grid size-8 shrink-0 place-items-center rounded-full bg-card text-[15px] font-bold text-brand">
+              3
+            </span>
+            <span>
+              <strong className="block text-[17px]">收到你的專屬連結</strong>
+              <span className="text-[14.5px] opacity-90">
+                我們會在 3 個工作日內建立好連結傳給你，分享出去就開始計算分潤。
+              </span>
+            </span>
+          </li>
+        </ol>
+
+        <p className="mt-7 border-t border-card/30 pt-5 text-[14px] opacity-90">
+          還在考慮也沒關係，有任何問題都可以先用上面的方式問我們。
+        </p>
       </section>
 
       {/* ---------- 細則分隔 ---------- */}
