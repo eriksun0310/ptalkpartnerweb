@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Fragment } from 'react';
 import { ContractSection } from '@/components/ContractSection';
 import { EarningsCalculator } from '@/components/EarningsCalculator';
+import { EmailButton } from '@/components/EmailButton';
 import {
   CONVERSION_ROWS,
   NET_RATE,
@@ -440,13 +441,8 @@ export default function Home() {
           <a href="#sign" className="font-bold underline underline-offset-2">頁面最下方</a>
           ，簽好拍照回傳後，3 個工作日內就會給你專屬連結。
         </p>
-        <div className="flex flex-wrap gap-3">
-          <a
-            href="mailto:connect.ptalk@gmail.com?subject=%E6%88%91%E6%83%B3%E5%8A%A0%E5%85%A5%20PTalk%20%E5%90%88%E4%BD%9C%E5%A4%A5%E4%BC%B4"
-            className="rounded-full bg-card px-6 py-3 text-[15px] font-bold text-brand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-card"
-          >
-            寫信給我們
-          </a>
+        <div className="flex flex-wrap items-start gap-3">
+          <EmailButton />
           <a
             href="https://www.threads.com/@ptalk.design"
             target="_blank"
