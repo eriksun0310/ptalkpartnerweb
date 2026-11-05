@@ -1,8 +1,9 @@
 import Image from 'next/image';
-import { Fragment } from 'react';
+import type { ReactNode } from 'react';
 import { ContractSection } from '@/components/ContractSection';
 import { EarningsCalculator } from '@/components/EarningsCalculator';
 import { EmailButton } from '@/components/EmailButton';
+import { StickyJoin } from '@/components/StickyJoin';
 import {
   CONVERSION_ROWS,
   NET_RATE,
@@ -58,7 +59,6 @@ const FAQS = [
       '可以的！建議先從一款 App 開始，等成效穩定之後，再跟我們申請其他 App 的專屬連結，每款 App 都會有自己的一組連結。',
       '要提醒你的是，每款 App 的分潤是分開計算的，級距也是各自認定，不會合併在一起。每個月的回報我們也會分別列出每款 App 的成效給你。',
     ],
-    open: false,
   },
   {
     q: '我要怎麼知道自己賣了幾筆？',
@@ -67,7 +67,6 @@ const FAQS = [
       '而且會附上 Apple 官方報表的截圖給你核對，其他夥伴的資料會遮蔽起來保護隱私——這些數字不是我們自己算出來的，是平台的官方數據。收到回報後的 14 天內，你隨時都可以提出疑問，我們會一起核對清楚。',
       '目前沒辦法讓你自己隨時登入查詢，是因為 Apple 後台沒有「只看單一推廣連結」這樣的權限層級，一旦開放權限，就會看到我們全部的營收跟其他夥伴的資料了。之後合作規模如果成長，我們會考慮做一個夥伴後台，讓你可以隨時自己查看。',
     ],
-    open: true,
   },
   {
     q: '為什麼剛開始看不到數據？',
@@ -76,7 +75,6 @@ const FAQS = [
       '這個是每個查詢期間各自判定的，不是說累積滿 5 次就永久解鎖囉。舉例來說，8 月有 3 次、9 月有 4 次，分開查都會看不到，但如果查 8 月到 9 月合計 7 次，就看得到了。',
       '想跟你說明的是，這只是暫時看不到數字而已，不代表沒有成效，更不會影響你的分潤。遇到這種情況，我們會把查詢期間拉長，等取得合計數據之後，照樣會算給你，請放心。',
     ],
-    open: true,
   },
   {
     q: '24 小時是指要在一天內購買嗎？',
@@ -86,7 +84,6 @@ const FAQS = [
       '反過來說，如果他點了連結卻沒有在 24 小時內下載，過了兩天才自己去商店搜尋安裝，那次安裝就不會歸到你的連結，之後的購買也不會算進去，這點要提醒你注意一下。',
       '另外，如果使用者刪除 App 後重新安裝，或是換了手機重新下載，原本的歸因關係有可能會中斷，這是平台機制的限制。',
     ],
-    open: false,
   },
   {
     q: '如果使用者點過好幾個人的連結呢？',
@@ -94,21 +91,18 @@ const FAQS = [
       'Apple 採用的是「last-touch」歸因，也就是只會算最後一次點擊的那個連結。',
       '所以如果對方先點了你的連結，之後又點了別人的連結才下載，那這筆就會算給後面那個人了。這是 Apple 平台本身的規則，我們沒辦法調整或覆寫，先讓你知道一下。',
     ],
-    open: false,
   },
   {
     q: '使用者退款會怎麼算？',
     a: [
       '退款的金額會從分潤基準中扣除，對應的分潤也就不會計算進去了。退款是由 Apple 審核決定的，這部分我們沒辦法控制，還請你理解。',
     ],
-    open: false,
   },
   {
     q: '我可以修改連結嗎？',
     a: [
       '這個部分要麻煩你不要修改喔，連結裡面有追蹤參數，改過的連結會完全沒辦法追蹤，透過它產生的下載跟購買都無法算進分潤裡面。直接複製分享出去就可以了，很簡單。',
     ],
-    open: false,
   },
   {
     q: '對數字有疑問怎麼辦？',
@@ -116,7 +110,6 @@ const FAQS = [
       '收到回報後的 14 天內都可以隨時跟我們提出，我們會提供 Apple 官方報表的截圖給你核對，為了保護其他合作夥伴，跟你無關的部分會做遮蔽處理。',
       '最終都會以 Apple 官方報表為準，我們自己的統計只是提供給你參考而已。',
     ],
-    open: false,
   },
 ] as const;
 
@@ -127,6 +120,35 @@ const AVOID = [
   '有損害 App 商譽的行為',
 ] as const;
 
+/** 合作細則的摺疊項目：標題＋一句重點，點開才看完整說明 */
+function DetailItem({
+  title,
+  teaser,
+  children,
+}: {
+  title: string;
+  teaser: string;
+  children: ReactNode;
+}) {
+  return (
+    <details className="group rounded-2xl bg-card shadow-[0_1px_0_var(--line)]">
+      <summary className="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-brand">
+        <span>
+          <span className="block text-[15.5px] font-bold">{title}</span>
+          <span className="block text-[13px] text-ink-3">{teaser}</span>
+        </span>
+        <span
+          aria-hidden="true"
+          className="shrink-0 text-xl/none text-ink-3 transition-transform group-open:rotate-45"
+        >
+          ＋
+        </span>
+      </summary>
+      <div className="border-t border-line px-5 pt-4 pb-5 text-[14.5px] text-ink-2">{children}</div>
+    </details>
+  );
+}
+
 export default function Home() {
   const netPercent = Math.round(NET_RATE * 100);
   const feeAndTax = UNIT_PRICE - Math.round(UNIT_PRICE * NET_RATE);
@@ -134,7 +156,7 @@ export default function Home() {
   return (
     <div className="mx-auto max-w-[780px] px-5 pb-24">
       {/* ---------- hero ---------- */}
-      <header className="pt-14 pb-8 sm:pt-20" data-print="hide">
+      <header id="hero" className="pt-14 pb-8 sm:pt-20" data-print="hide">
         <span className="inline-block rounded-full bg-brand-2 px-3.5 py-1 text-[13px] font-bold text-brand">
           PTalk 合作夥伴計劃
         </span>
@@ -202,26 +224,24 @@ export default function Home() {
       </section>
 
       {/* ---------- tiers ---------- */}
-      <section id="tiers" className="scroll-mt-6 py-11" data-print="hide">
+      <section id="tiers" className="scroll-mt-6 py-10" data-print="hide">
         <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-balance">分潤級距</h2>
-        <p className="mb-5 max-w-[46ch] text-ink-2">
-          分潤比例會依照你當月的分潤基準金額來看，只要達到門檻，
-          <strong className="text-ink">當月全部</strong>
-          都會用新的比例計算給你，不用等到下個月。
+        <p className="mb-4 max-w-[46ch] text-ink-2">
+          當月賣得越多，比例越高。達到門檻後，<strong className="text-ink">當月全部</strong>都用新的比例算給你。
         </p>
 
-        <ul className="flex flex-col gap-2">
+        <ul className="overflow-hidden rounded-2xl bg-card shadow-[0_1px_0_var(--line)]">
           {TIER_ROWS.map((t) => (
             <li
               key={t.rate}
-              className="relative grid grid-cols-[1fr_auto] items-center gap-3.5 overflow-hidden rounded-2xl border border-line bg-card px-4 py-3.5"
+              className="relative flex items-center justify-between gap-3 border-b border-line px-4 py-2.5 last:border-0 sm:px-5"
             >
               <span
                 aria-hidden="true"
                 className="absolute inset-y-0 left-0 w-1 bg-brand"
                 style={{ opacity: t.weight }}
               />
-              <span className="text-[15px] text-ink-2">
+              <span className="text-[14.5px] text-ink-2">
                 {t.label.startsWith('未達') ? (
                   <>
                     未達 <b className="font-semibold text-ink">{t.label.slice(3)}</b>
@@ -232,170 +252,57 @@ export default function Home() {
                   </>
                 )}
               </span>
-              <span className="text-[27px] font-bold text-brand tabular-nums tracking-tight">
+              <span className="text-[22px] font-bold text-brand tabular-nums tracking-tight">
                 {formatPercent(t.rate)}
               </span>
             </li>
           ))}
         </ul>
-
-        <div className="mt-3.5 rounded-2xl border border-line bg-card px-5 py-4">
-          <h3 className="mb-1.5 text-base font-semibold">全額套用，不是分段計算</h3>
-          <p className="text-[14.5px] text-ink-2">
-            舉例來說，如果當月基準金額是 NT$10,000，適用 25%，你就能拿到{' '}
-            <strong className="text-ink">NT$2,500</strong> —— 不是前面 5,000 算 20%、後面 5,000
-            才算 25% 喔，是全部一起用 25% 算給你。
-          </p>
-          <p className="mt-2 text-[14.5px] text-ink-2">
-            級距是每個月重新計算的，這個月做到 20%，下個月會從 10% 重新開始算，提醒你留意一下。
-          </p>
-          <p className="mt-2 text-[14.5px] text-ink-2">
-            如果你同時推好幾款 App，<strong className="text-ink">每款 App 的級距是分開算的</strong>
-            ，不會合併在一起。
-          </p>
-        </div>
+        <p className="mt-2.5 px-1 text-[13px] text-ink-3">
+          金額指分潤基準金額（我們實收的部分）。級距每月重新計算，每款 App 各自計算。
+        </p>
       </section>
 
-      {/* ---------- calculator + proof + benchmark ---------- */}
-      <section className="border-t border-line py-11" data-print="hide">
+      {/* ---------- 試算 ---------- */}
+      <section className="py-10" data-print="hide">
         <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-balance">試算你能拿多少</h2>
-        <p className="mb-5 max-w-[46ch] text-ink-2">
-          拉拉看下面的滑桿，馬上就能看到不同銷售量對應的分潤金額。
-        </p>
-
+        <p className="mb-4 max-w-[46ch] text-ink-2">拉拉看滑桿，馬上看到不同銷售量能拿到的分潤。</p>
         <EarningsCalculator />
-
-        {/* 高低比較 */}
-        <div className="mt-4 rounded-2xl border border-line bg-card px-5 py-5 sm:px-6">
-          <h3 className="mb-1.5 text-[17px] font-semibold">這個比例算高還是低？</h3>
-          <p className="mb-4 max-w-[54ch] text-[14.5px] text-ink-2">
-            先跟你說明清楚一件事：你的分潤是從我們實際收到的金額來算的，不是從使用者付款的總額去算。
-            換算成使用者付款的比例，會比級距上寫的數字低一些，這點想先讓你知道，避免之後有落差感。
-          </p>
-
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-stretch">
-            {[
-              { k: '用戶付款', v: `NT$${UNIT_PRICE}`, muted: false },
-              { k: '平台手續費 + 稅', v: `−NT$${feeAndTax}`, muted: true },
-              { k: '我們實收（分潤基準）', v: `NT$${UNIT_PRICE - feeAndTax}`, muted: false },
-            ].map((s, i) => (
-              <Fragment key={s.k}>
-                {i > 0 && (
-                  <span
-                    aria-hidden="true"
-                    className="hidden self-center text-[15px] text-ink-3 sm:inline"
-                  >
-                    →
-                  </span>
-                )}
-                <div
-                  className={`flex flex-1 flex-col rounded-lg bg-sunk px-3.5 py-2.5 ${s.muted ? 'opacity-70' : ''}`}
-                >
-                  <span className="text-xs font-semibold text-ink-3">{s.k}</span>
-                  <span className="text-[19px] font-bold tabular-nums tracking-tight">{s.v}</span>
-                </div>
-              </Fragment>
-            ))}
-          </div>
-
-          <p className="mt-2.5 max-w-[56ch] text-[13px] text-ink-3">
-            這中間扣掉的 NT${feeAndTax}，是 Apple 平台手續費和各地稅金收走的，我們自己也拿不到，
-            所以沒有算進分潤基準裡面。
-          </p>
-
-          <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
-            <table className="w-full border-collapse text-[14.5px]">
-              <thead>
-                <tr>
-                  <th className="border-b border-line bg-sunk px-4 py-2.5 text-left text-[12.5px] font-bold whitespace-nowrap text-ink-3">
-                    當你適用的分潤比例
-                  </th>
-                  <th className="border-b border-line bg-sunk px-4 py-2.5 text-right text-[12.5px] font-bold whitespace-nowrap text-ink-3">
-                    每筆你拿
-                  </th>
-                  <th className="border-b border-line bg-sunk px-4 py-2.5 text-right text-[12.5px] font-bold whitespace-nowrap text-ink-3">
-                    相當於用戶付款的
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {CONVERSION_ROWS.map((r) => (
-                  <tr key={r.rate}>
-                    <td className="border-b border-line px-4 py-2.5 last:border-0">
-                      {formatPercent(r.rate)}
-                    </td>
-                    <td className="border-b border-line px-4 py-2.5 text-right tabular-nums">
-                      NT${r.perUnit}
-                    </td>
-                    <td className="border-b border-line px-4 py-2.5 text-right tabular-nums">
-                      約 {(r.ofGross * 100).toFixed(1).replace(/\.0$/, '')}%
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <h3 className="mt-5 mb-1.5 text-[17px] font-semibold">跟市場行情比</h3>
-          <div className="flex flex-col gap-2.5">
-            {MARKET_ROWS.map((m) => (
-              <div
-                key={m.label}
-                className="grid grid-cols-[104px_1fr_56px] items-center gap-2 text-[12.5px] sm:grid-cols-[130px_1fr_62px] sm:gap-3 sm:text-[13.5px]"
-              >
-                <span className={m.own ? 'font-bold text-ink' : 'text-ink-2'}>{m.label}</span>
-                <span className="h-2.5 overflow-hidden rounded-full bg-sunk">
-                  <i
-                    className={`block h-full rounded-full ${m.own ? 'bg-brand' : 'bg-line-2'}`}
-                    style={{ width: `${m.width * 2.5}%` }}
-                  />
-                </span>
-                <span
-                  className={`text-right tabular-nums ${m.own ? 'font-bold text-brand' : 'text-ink-3'}`}
-                >
-                  {m.range}
-                </span>
-              </div>
-            ))}
-          </div>
-          <p className="mt-3 max-w-[56ch] text-[13px] text-ink-3">
-            這裡是用佔使用者付款總額的比例來比較的。可以看到我們的級距，其實已經涵蓋了一般 App
-            推廣到數位課程的區間 ——
-            <strong className="text-ink-2">你做得越多，比例就會越接近最頂端。</strong>
-          </p>
-        </div>
       </section>
 
       {/* ---------- 更多 App ---------- */}
-      <section className="border-t border-line py-11" data-print="hide">
+      <section className="py-10" data-print="hide">
         <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-balance">
           做出成績，你能推的不只一款
         </h2>
         <p className="mb-5 max-w-[46ch] text-ink-2">
-          先從一款 App 開始，等成效穩定了，可以再跟我們申請其他 App 的專屬連結。同一群受眾往往需要不只一款工具
-          ——<strong className="text-ink">你分享一次，就可能接住他們整段學習路上的需求。</strong>
+          先從一款開始，成效穩定後可以再申請其他 App 的連結。
+          <strong className="text-ink">你分享一次，就可能接住受眾整段學習路上的需求。</strong>
         </p>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3.5">
           {APP_GROUPS.map((g) => (
             <div
               key={g.audience}
-              className="rounded-3xl bg-card px-5 py-5 shadow-[0_1px_0_var(--line)] sm:px-6"
+              className="rounded-3xl bg-card px-4 py-5 shadow-[0_1px_0_var(--line)] sm:px-6"
             >
-              <h3 className="text-[17px] font-bold">{g.audience}</h3>
-              <p className="mb-4 text-[13px] text-ink-3">{g.hint}</p>
-              <ul className="grid grid-cols-1 gap-x-4 gap-y-3.5 sm:grid-cols-2">
+              <h3 className="px-1 text-[16px] font-bold sm:px-0">{g.audience}</h3>
+              <p className="mb-4 px-1 text-[13px] text-ink-3 sm:px-0">{g.hint}</p>
+              <ul className="grid grid-cols-3 gap-x-2 gap-y-4 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-3.5">
                 {g.apps.map((a) => (
-                  <li key={a.id} className="flex items-center gap-3.5">
+                  <li
+                    key={a.id}
+                    className="flex flex-col items-center gap-1.5 text-center sm:flex-row sm:gap-3.5 sm:text-left"
+                  >
                     <Image
                       src={`/apps/${a.id}.png`}
                       alt=""
                       width={52}
                       height={52}
-                      className={`size-13 shrink-0 rounded-[14px] ring-1 ring-line ${a.soon ? 'opacity-60' : ''}`}
+                      className={`size-14 shrink-0 rounded-[15px] ring-1 ring-line sm:size-13 sm:rounded-[14px] ${a.soon ? 'opacity-60' : ''}`}
                     />
                     <span className="min-w-0">
-                      <span className="flex items-center gap-2 text-[15px] font-bold">
+                      <span className="flex flex-col items-center gap-1 text-[13.5px] font-bold sm:flex-row sm:gap-2 sm:text-[15px]">
                         {a.name}
                         {a.soon && (
                           <span className="rounded-full bg-sunk px-2 py-0.5 text-[11px] font-bold text-ink-2">
@@ -403,7 +310,7 @@ export default function Home() {
                           </span>
                         )}
                       </span>
-                      <span className="block text-[13px]/snug text-ink-2">{a.desc}</span>
+                      <span className="hidden text-[13px]/snug text-ink-2 sm:block">{a.desc}</span>
                     </span>
                   </li>
                 ))}
@@ -496,24 +403,34 @@ export default function Home() {
         </p>
       </section>
 
-      {/* ---------- 細則分隔 ---------- */}
-      <div className="pt-14 pb-2" data-print="hide">
-        <p className="text-[13px] font-bold tracking-[0.12em] text-ink-3">合作細則</p>
-        <p className="mt-1 max-w-[46ch] text-[15px] text-ink-2">
-          以下是分潤怎麼算、什麼時候匯款，以及 Apple 平台的一些規則。加入前花幾分鐘看一下，之後合作會更順利。
-        </p>
-      </div>
-
-      {/* ---------- 分潤基準金額 ---------- */}
-      <section className="border-t border-line py-11" data-print="hide">
-        <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-balance">
-          「分潤基準金額」是什麼
-        </h2>
+      {/* ---------- 合作細則 ---------- */}
+      <section className="pt-12 pb-6" data-print="hide">
+        <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-balance">合作細則</h2>
         <p className="mb-5 max-w-[46ch] text-ink-2">
-          這裡想跟你說明一下，分潤是用<strong className="text-ink">我們實際收到的金額</strong>
-          來計算，不是使用者付款的總額喔，這個差異蠻重要的，先讓你了解一下。
+          分潤怎麼算、什麼時候匯款，以及 Apple 平台的規則。點開就能看詳細說明。
         </p>
 
+        <div className="flex flex-col gap-2.5">
+          <DetailItem title="級距怎麼認定" teaser="全額套用、每月重算、每款 App 分開算">
+            <p>
+              舉例來說，如果當月基準金額是 NT$10,000，適用 25%，你就能拿到{' '}
+              <strong className="text-ink">NT$2,500</strong> —— 不是前面 5,000 算 20%、後面 5,000
+              才算 25% 喔，是全部一起用 25% 算給你。
+            </p>
+            <p className="mt-2">
+              級距是每個月重新計算的，這個月做到 20%，下個月會從 10% 重新開始算，提醒你留意一下。
+            </p>
+            <p className="mt-2">
+              如果你同時推好幾款 App，<strong className="text-ink">每款 App 的級距是分開算的</strong>
+              ，不會合併在一起。
+            </p>
+          </DetailItem>
+
+          <DetailItem title="分潤基準金額是什麼" teaser="用戶付 NT$90，我們實收約 NT$60">
+            <p className="mb-4">
+              分潤是用<strong className="text-ink">我們實際收到的金額</strong>
+              來計算，不是使用者付款的總額喔，這個差異蠻重要的，先讓你了解一下。
+            </p>
         <div className="overflow-x-auto rounded-2xl border border-line">
           <table className="w-full border-collapse text-[14.5px]">
             <tbody>
@@ -543,8 +460,8 @@ export default function Home() {
           </table>
         </div>
 
-        <div className="mt-3.5 rounded-2xl border border-line bg-card px-5 py-4">
-          <h3 className="mb-1.5 text-base font-semibold">為什麼扣掉這些</h3>
+        <div className="mt-3.5 rounded-2xl bg-sunk px-5 py-4">
+          <h4 className="mb-1.5 text-[15px] font-bold">為什麼扣掉這些</h4>
           <p className="text-[14.5px] text-ink-2">
             平台手續費跟各地稅金，是 <strong className="text-ink">Apple 直接扣掉</strong>
             的，不會進到我們手上，這部分我們跟你一樣，也是拿不到的。
@@ -559,8 +476,8 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="mt-3.5 rounded-2xl border border-line bg-card px-5 py-4">
-          <h3 className="mb-1.5 text-base font-semibold">實收率會變動</h3>
+        <div className="mt-3.5 rounded-2xl bg-sunk px-5 py-4">
+          <h4 className="mb-1.5 text-[15px] font-bold">實收率會變動</h4>
           <p className="text-[14.5px] text-ink-2">
             實收率目前大約是 <strong className="text-ink">{netPercent}%</strong>
             ，會因為銷售地區的組成（各地稅率不太一樣）、還有平台費率或稅法的調整而有些變化。
@@ -571,17 +488,80 @@ export default function Home() {
             ，這個數字是照當月財務報表的實際情況算出來的，不是隨便估的，你可以放心拿來核對。
           </p>
         </div>
-      </section>
 
-      {/* ---------- Apple vs Android ---------- */}
-      <section className="border-t border-line py-11" data-print="hide">
-        <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-balance">Apple 與 Android</h2>
-        <p className="mb-5 max-w-[46ch] text-ink-2">
-          我們會給你兩個連結，不過<strong className="text-ink">分潤的計算是以 Apple 的數據為準</strong>。
-        </p>
+            <h4 className="mt-5 mb-1.5 text-[15px] font-bold">這個比例算高還是低？</h4>
+          <p className="mb-3 max-w-[54ch] text-[14.5px] text-ink-2">
+            因為分潤是從我們實收的金額來算，換算成使用者付款的比例，會比級距上寫的數字低一些，先讓你知道，避免之後有落差感。
+          </p>
 
+          <div className="overflow-x-auto rounded-2xl border border-line">
+            <table className="w-full border-collapse text-[14.5px]">
+              <thead>
+                <tr>
+                  <th className="border-b border-line bg-sunk px-3 py-2 sm:px-4 sm:py-2.5 text-left text-[12.5px] font-bold whitespace-nowrap text-ink-3">
+                    你的級距
+                  </th>
+                  <th className="border-b border-line bg-sunk px-3 py-2 sm:px-4 sm:py-2.5 text-right text-[12.5px] font-bold whitespace-nowrap text-ink-3">
+                    每筆你拿
+                  </th>
+                  <th className="border-b border-line bg-sunk px-3 py-2 sm:px-4 sm:py-2.5 text-right text-[12.5px] font-bold whitespace-nowrap text-ink-3">
+                    佔用戶付款
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {CONVERSION_ROWS.map((r) => (
+                  <tr key={r.rate}>
+                    <td className="border-b border-line px-3 py-2 sm:px-4 sm:py-2.5 last:border-0">
+                      {formatPercent(r.rate)}
+                    </td>
+                    <td className="border-b border-line px-3 py-2 sm:px-4 sm:py-2.5 text-right tabular-nums">
+                      NT${r.perUnit}
+                    </td>
+                    <td className="border-b border-line px-3 py-2 sm:px-4 sm:py-2.5 text-right tabular-nums">
+                      約 {(r.ofGross * 100).toFixed(1).replace(/\.0$/, '')}%
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h4 className="mt-5 mb-2 text-[15px] font-bold">跟市場行情比</h4>
+          <div className="flex flex-col gap-2.5">
+            {MARKET_ROWS.map((m) => (
+              <div
+                key={m.label}
+                className="grid grid-cols-[104px_1fr_56px] items-center gap-2 text-[12.5px] sm:grid-cols-[130px_1fr_62px] sm:gap-3 sm:text-[13.5px]"
+              >
+                <span className={m.own ? 'font-bold text-ink' : 'text-ink-2'}>{m.label}</span>
+                <span className="h-2.5 overflow-hidden rounded-full bg-sunk">
+                  <i
+                    className={`block h-full rounded-full ${m.own ? 'bg-brand' : 'bg-line-2'}`}
+                    style={{ width: `${m.width * 2.5}%` }}
+                  />
+                </span>
+                <span
+                  className={`text-right tabular-nums ${m.own ? 'font-bold text-brand' : 'text-ink-3'}`}
+                >
+                  {m.range}
+                </span>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 max-w-[56ch] text-[13px] text-ink-3">
+            這裡是用佔使用者付款總額的比例來比較的。可以看到我們的級距，其實已經涵蓋了一般 App
+            推廣到數位課程的區間 ——
+            <strong className="text-ink-2">你做得越多，比例就會越接近最頂端。</strong>
+          </p>
+          </DetailItem>
+
+          <DetailItem title="Apple 與 Android" teaser="分潤以 Apple 的數據為準">
+            <p className="mb-4">
+              我們會給你兩個連結，不過<strong className="text-ink">分潤的計算是以 Apple 的數據為準</strong>。
+            </p>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <div className="rounded-2xl border border-line bg-card px-4 py-4">
+          <div className="rounded-2xl bg-sunk px-4 py-4">
             <p className="mb-1.5 flex items-center gap-2 text-[15px] font-bold">
               <span aria-hidden="true" className="size-2 shrink-0 rounded-full bg-brand" />
               Apple App Store
@@ -590,7 +570,7 @@ export default function Home() {
               報表可以清楚看到每個連結各自帶來多少購買金額，所以能夠算出分潤。
             </p>
           </div>
-          <div className="rounded-2xl border border-line bg-card px-4 py-4">
+          <div className="rounded-2xl bg-sunk px-4 py-4">
             <p className="mb-1.5 flex items-center gap-2 text-[15px] font-bold">
               <span aria-hidden="true" className="size-2 shrink-0 rounded-full bg-alert" />
               Google Play
@@ -623,12 +603,9 @@ export default function Home() {
         <p className="text-[15px] text-ink-2">
           Play 這邊的推廣成效我們還是會參考，像是續約評估的時候都會看，只是暫時不會直接算進分潤裡面。
         </p>
-      </section>
+          </DetailItem>
 
-      {/* ---------- 結算與匯款 ---------- */}
-      <section className="border-t border-line py-11" data-print="hide">
-        <h2 className="mb-5 text-2xl font-bold tracking-tight text-balance">結算與匯款</h2>
-
+          <DetailItem title="結算與匯款" teaser="次月月初回報，次次月月中匯款">
         <ol className="flex flex-col gap-3">
           {[
             {
@@ -656,31 +633,50 @@ export default function Home() {
           ))}
         </ol>
 
-        <div className="mt-4 rounded-2xl border border-line bg-card px-5 py-4">
-          <h3 className="mb-1.5 text-base font-semibold">匯款手續費</h3>
+        <div className="mt-4 rounded-2xl bg-sunk px-5 py-4">
+          <h4 className="mb-1.5 text-[15px] font-bold">匯款手續費</h4>
           <p className="text-[14.5px] text-ink-2">
             如果是<strong className="text-ink">台灣帳戶，手續費（含跨行）我們來負擔</strong>
             ，你拿到的會是完整金額。
             海外帳戶因為國際電匯的成本比較高，會由收款方負擔，不過我們會在匯款前先告知你預估金額，讓你心裡有數。
           </p>
         </div>
+          </DetailItem>
+
+          <DetailItem title="推廣時想請你留意的幾件事" teaser="避免被平台判定為異常">
+            <p className="mb-4">
+              這些行為可能會被平台判定成異常，連帶也會影響到當期的分潤，提醒你多注意。
+            </p>
+        <ul className="overflow-hidden rounded-2xl border border-line">
+          {AVOID.map((a) => (
+            <li
+              key={a}
+              className="border-b border-line bg-card px-4 py-2.5 text-[14.5px] last:border-0"
+            >
+              {a}
+            </li>
+          ))}
+        </ul>
+          </DetailItem>
+        </div>
       </section>
 
       {/* ---------- FAQ ---------- */}
-      <section className="border-t border-line py-11" data-print="hide">
-        <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-balance">
-          幾個你會想先知道的追蹤細節
-        </h2>
+      <section className="py-6" data-print="hide">
+        <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-balance">常見問題</h2>
         <p className="mb-3 max-w-[46ch] text-ink-2">
-          這些都是 Apple 平台本身的機制，我們沒辦法調整，先跟你說清楚，避免之後彼此有誤會。
+          大多是 Apple 平台本身的追蹤機制，我們沒辦法調整，先跟你說清楚。
         </p>
 
         <div className="flex flex-col">
           {FAQS.map((f) => (
-            <details key={f.q} open={f.open} className="border-b border-line py-1">
-              <summary className="flex cursor-pointer items-baseline justify-between gap-3.5 py-3 text-base font-semibold focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-brand">
+            <details key={f.q} className="group border-b border-line py-1">
+              <summary className="flex cursor-pointer items-baseline justify-between gap-3.5 py-3 text-[15.5px] font-semibold focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-brand">
                 {f.q}
-                <span aria-hidden="true" className="shrink-0 text-xl/none text-ink-3">
+                <span
+                  aria-hidden="true"
+                  className="shrink-0 text-xl/none text-ink-3 transition-transform group-open:rotate-45"
+                >
                   ＋
                 </span>
               </summary>
@@ -696,27 +692,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ---------- 推廣時請避免 ---------- */}
-      <section className="border-t border-line py-11" data-print="hide">
-        <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-balance">
-          推廣時想請你留意的幾件事
-        </h2>
-        <p className="mb-4 max-w-[46ch] text-ink-2">
-          這些行為可能會被平台判定成異常，連帶也會影響到當期的分潤，提醒你多注意。
-        </p>
-        <ul className="overflow-hidden rounded-2xl border border-line">
-          {AVOID.map((a) => (
-            <li
-              key={a}
-              className="border-b border-line bg-card px-4 py-2.5 text-[14.5px] last:border-0"
-            >
-              {a}
-            </li>
-          ))}
-        </ul>
-      </section>
-
       <ContractSection />
+
+      <StickyJoin />
 
       <footer className="mt-10 border-t border-line pt-6 text-[13.5px] text-ink-3" data-print="hide">
         <p className="mb-2 max-w-[60ch]">

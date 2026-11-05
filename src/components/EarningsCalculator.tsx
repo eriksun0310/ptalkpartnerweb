@@ -8,11 +8,11 @@ import { estimate, formatPercent, formatTwd, NET_RATE, UNIT_PRICE } from '@/lib/
  * 並提示距離下一階還差幾筆 —— 讓級距從「遙遠門檻」變成可行目標。
  */
 export function EarningsCalculator() {
-  const [qty, setQty] = useState(40);
+  const [qty, setQty] = useState(90);
   const result = useMemo(() => estimate(qty), [qty]);
 
   return (
-    <div className="mt-2 overflow-hidden rounded-2xl border border-line-2 bg-card">
+    <div className="overflow-hidden rounded-2xl bg-card shadow-[0_1px_0_var(--line),0_12px_32px_-18px_rgb(59_42_34/0.25)]">
       <div className="px-5 pt-5 pb-1.5 sm:px-6">
         <label
           htmlFor="qty"
@@ -38,8 +38,8 @@ export function EarningsCalculator() {
         </div>
       </div>
 
-      <dl className="mt-4 grid grid-cols-1 border-t border-line sm:grid-cols-3">
-        <div className="border-b border-line px-5 py-4 sm:border-r sm:border-b-0">
+      <dl className="mt-4 grid grid-cols-2 border-t border-line sm:grid-cols-3">
+        <div className="border-r border-b border-line px-5 py-4 sm:border-b-0">
           <dt className="text-xs font-bold tracking-wide text-ink-3">分潤基準金額</dt>
           <dd className="mt-0.5 text-[23px] font-bold tabular-nums tracking-tight">
             {formatTwd(result.base)}
@@ -61,9 +61,9 @@ export function EarningsCalculator() {
           </p>
         </div>
 
-        <div className="bg-brand-2 px-5 py-4">
+        <div className="col-span-2 bg-brand-2 px-5 py-4 sm:col-span-1">
           <dt className="text-xs font-bold tracking-wide text-ink-3">你的分潤</dt>
-          <dd className="mt-0.5 text-[23px] font-bold text-brand tabular-nums tracking-tight">
+          <dd className="mt-0.5 text-[28px] font-bold text-brand sm:text-[23px] tabular-nums tracking-tight">
             {formatTwd(result.share)}
           </dd>
           <p className="mt-0.5 text-xs text-ink-3">
@@ -71,15 +71,15 @@ export function EarningsCalculator() {
               ? '—'
               : result.payableThisMonth
                 ? '已達匯款門檻'
-                : '未達 NT$1,000，累計至下期'}
+                : '累計滿 NT$1,000 就會匯款'}
           </p>
         </div>
       </dl>
 
       <p className="border-t border-line bg-sunk px-5 py-3.5 text-[13.5px] text-ink-2">
-        以單價 NT${UNIT_PRICE}、實收率{' '}
-        <span className="tabular-nums">{Math.round(NET_RATE * 100)}%</span> 估算。
-        實際金額依 Apple 官方報表為準，實收率每月可能不同。
+        以壽司日檢單價 NT${UNIT_PRICE}、實收率{' '}
+        <span className="tabular-nums">{Math.round(NET_RATE * 100)}%</span> 估算，實際依 Apple
+        官方報表為準。
       </p>
     </div>
   );
