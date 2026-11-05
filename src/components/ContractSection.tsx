@@ -40,7 +40,8 @@ const CLAUSES: ReadonlyArray<{
     intro:
       '分潤比例依當月分潤基準金額認定，達到門檻者，該月全額適用該級距比例（非分段累進）：',
     table: true,
-    outro: '級距以各月單獨認定，不跨月累計。',
+    outro:
+      '級距以各月單獨認定，不跨月累計。乙方推廣多款 App 者，各 App 之分潤基準金額及適用級距分別認定，不合併計算。',
   },
   {
     heading: '第三條　分潤基準金額',
@@ -186,20 +187,20 @@ export function ContractSection() {
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="contract"
-            className="cursor-pointer rounded-lg bg-brand px-6 py-3 text-[15px] font-semibold text-bg focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-brand hover:brightness-110"
+            className="cursor-pointer rounded-full bg-brand px-6 py-3 text-[15px] font-semibold text-bg focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-brand hover:brightness-110"
           >
             {open ? '收合合約條款' : '檢視合約條款'}
           </button>
           <button
             type="button"
             onClick={handlePrint}
-            className="cursor-pointer rounded-lg border border-line-2 px-6 py-3 text-[15px] font-semibold focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-brand hover:bg-card"
+            className="cursor-pointer rounded-full border border-line-2 px-6 py-3 text-[15px] font-semibold focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-brand hover:bg-card"
           >
             列印 / 存成 PDF
           </button>
         </div>
 
-        <div className="mt-4 rounded-xl border border-line bg-card px-5 py-4">
+        <div className="mt-4 rounded-2xl border border-line bg-card px-5 py-4">
           <h3 className="mb-1.5 text-base font-semibold">合約要填的欄位</h3>
           <p className="text-[14.5px] text-ink-2">
             <strong className="text-ink">合作起始日</strong>
@@ -213,7 +214,7 @@ export function ContractSection() {
           id="contract"
           ref={contractRef}
           data-print="contract"
-          className="contract-body mt-5 rounded-xl border border-line-2 bg-card px-5 py-8 text-sm/[1.75] sm:px-8"
+          className="contract-body mt-5 rounded-2xl border border-line-2 bg-card px-5 py-8 text-sm/[1.75] sm:px-8"
         >
           <header
             className="mb-1.5 border-b-2 border-ink pb-3.5 text-center"

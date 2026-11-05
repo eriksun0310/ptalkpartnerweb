@@ -8,50 +8,50 @@
  * 顏色一律只在 token 層定義，元件只透過 var() 取用。
  */
 :root {
-  --bg: #fbfaf7;
+  --bg: #fbf5ec;
   --card: #ffffff;
-  --sunk: #f2f0ea;
-  --ink: #1a1d22;
-  --ink-2: #565c66;
-  --ink-3: #8b929c;
-  --line: #e3e1da;
-  --line-2: #c9c6bc;
-  --brand: #1f6f5c;
-  --brand-2: #e7f1ed;
-  --alert: #a34434;
-  --alert-2: #fbeae6;
+  --sunk: #f5ebde;
+  --ink: #3b2a22;
+  --ink-2: #6e5a4e;
+  --ink-3: #8a7366;
+  --line: #eadfd1;
+  --line-2: #d9c8b6;
+  --brand: #b8462e;
+  --brand-2: #f8e1d8;
+  --alert: #9a5a12;
+  --alert-2: #fbefd9;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #121417;
-    --card: #1b1e22;
-    --sunk: #0e1013;
-    --ink: #edeeea;
-    --ink-2: #a6acb4;
-    --ink-3: #767d86;
-    --line: #2b2f35;
-    --line-2: #3e444b;
-    --brand: #6fc3a8;
-    --brand-2: #1a2e28;
-    --alert: #e89383;
-    --alert-2: #301d19;
+    --bg: #1c1714;
+    --card: #26201c;
+    --sunk: #161210;
+    --ink: #f3eae2;
+    --ink-2: #b8a79b;
+    --ink-3: #93837a;
+    --line: #362d27;
+    --line-2: #4a3e36;
+    --brand: #f2957c;
+    --brand-2: #3a231c;
+    --alert: #e8b26a;
+    --alert-2: #33261a;
   }
 }
 
 :root[data-theme="dark"] {
-  --bg: #121417;
-  --card: #1b1e22;
-  --sunk: #0e1013;
-  --ink: #edeeea;
-  --ink-2: #a6acb4;
-  --ink-3: #767d86;
-  --line: #2b2f35;
-  --line-2: #3e444b;
-  --brand: #6fc3a8;
-  --brand-2: #1a2e28;
-  --alert: #e89383;
-  --alert-2: #301d19;
+  --bg: #1c1714;
+  --card: #26201c;
+  --sunk: #161210;
+  --ink: #f3eae2;
+  --ink-2: #b8a79b;
+  --ink-3: #93837a;
+  --line: #362d27;
+  --line-2: #4a3e36;
+  --brand: #f2957c;
+  --brand-2: #3a231c;
+  --alert: #e8b26a;
+  --alert-2: #33261a;
 }
 
 /* 讓 Tailwind 的 bg / text / border 工具類能吃到這些 token */

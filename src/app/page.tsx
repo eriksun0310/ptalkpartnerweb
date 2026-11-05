@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Fragment } from 'react';
 import { ContractSection } from '@/components/ContractSection';
 import { EarningsCalculator } from '@/components/EarningsCalculator';
@@ -17,7 +18,47 @@ const MARKET_ROWS = [
   { label: '數位課程 / 軟體', range: '20–40%', width: 40, own: false },
 ] as const;
 
+/** 可推廣的 App，依受眾分組；資料對照 PTalk 學習地圖（ptalklearnweb/data） */
+const APP_GROUPS = [
+  {
+    audience: '你的受眾在學日文',
+    hint: '從五十音到 N1，一路都有適合的工具',
+    apps: [
+      { id: 'sushijp', name: '壽司日檢', desc: '每天五分鐘背日檢單字', soon: false },
+      { id: 'ninja-pigeon', name: '忍者信鴿', desc: '聽日文、練文法、讀短文', soon: false },
+      { id: 'hitofude', name: '日日一字', desc: '一天一個字，手寫練日文', soon: false },
+      { id: 'koko', name: 'KOKO', desc: '從機場到居酒屋，開口說日文', soon: false },
+      { id: 'kana5min', name: '諧音五十音', desc: '台灣人專屬的假名諧音記憶法', soon: true },
+      { id: 'sushitower', name: '壽司轉珠', desc: '拼日文單字的闖關遊戲', soon: true },
+    ],
+  },
+  {
+    audience: '你的受眾在準備多益',
+    hint: '單字和職場情境各有一款',
+    apps: [
+      { id: 'pizzatoeic', name: '披薩多益', desc: '多益單字每天刷五分鐘', soon: false },
+      { id: 'rooster-hero', name: '公雞超人', desc: '用職場情境闖關練多益', soon: false },
+    ],
+  },
+  {
+    audience: '你的受眾想戒手機、變自律',
+    hint: '目前僅有 iPhone 版',
+    apps: [{ id: 'lockin', name: 'Lock In', desc: '鎖住想戒的 App，許下承諾撐到底', soon: false }],
+  },
+] as const;
+
+/** 實績卡上的圖示列（取已上架、辨識度高的幾款） */
+const HERO_ICONS = ['sushijp', 'ninja-pigeon', 'koko', 'pizzatoeic', 'rooster-hero', 'hitofude'] as const;
+
 const FAQS = [
+  {
+    q: '可以同時推好幾款 App 嗎？',
+    a: [
+      '可以的！建議先從一款 App 開始，等成效穩定之後，再跟我們申請其他 App 的專屬連結，每款 App 都會有自己的一組連結。',
+      '要提醒你的是，每款 App 的分潤是分開計算的，級距也是各自認定，不會合併在一起。每個月的回報我們也會分別列出每款 App 的成效給你。',
+    ],
+    open: false,
+  },
   {
     q: '我要怎麼知道自己賣了幾筆？',
     a: [
@@ -92,24 +133,75 @@ export default function Home() {
   return (
     <div className="mx-auto max-w-[780px] px-5 pb-24">
       {/* ---------- hero ---------- */}
-      <header className="pt-14 pb-10 sm:pt-16" data-print="hide">
-        <span className="inline-block rounded-full bg-brand-2 px-3 py-1 text-xs font-bold tracking-[0.14em] text-brand uppercase">
+      <header className="pt-14 pb-8 sm:pt-20" data-print="hide">
+        <span className="inline-block rounded-full bg-brand-2 px-3.5 py-1 text-[13px] font-bold text-brand">
           PTalk 合作夥伴計劃
         </span>
-        <h1 className="mt-5 mb-3.5 text-[clamp(30px,5.6vw,46px)]/[1.2] font-bold tracking-tight text-balance">
-          你帶來的銷售越多，
+        <h1 className="mt-5 mb-4 text-[clamp(32px,6vw,52px)]/[1.2] font-bold tracking-tight text-balance">
+          隨手分享一個連結，
           <br />
-          分潤比例就越高。
+          分潤最高 <span className="text-brand">30%</span>
         </h1>
-        <p className="max-w-[34ch] text-lg text-ink-2">
-          我們會給你一個<strong className="text-ink">專屬的 App 推薦連結</strong>
-          ，分享給朋友、粉絲或社群都可以。只要有人透過這個連結下載並購買，你就能拿到分潤，最高可以到{' '}
-          <strong className="text-ink">30%</strong>。
+        <p className="max-w-[36ch] text-lg text-ink-2">
+          不用是網紅，也不用買廣告。我們會給你一個
+          <strong className="text-ink">專屬的 App 推薦連結</strong>
+          ，分享給朋友、學生或粉絲就好。有人透過它下載並購買，你就能拿到分潤，賣得越多比例越高。
         </p>
+        <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
+          <a
+            href="#join"
+            className="rounded-full bg-brand px-6 py-3 text-[15px] font-bold text-card transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-brand"
+          >
+            我想加入
+          </a>
+          <a href="#tiers" className="text-[15px] font-semibold text-ink-2 hover:text-ink">
+            先看分潤怎麼算 ↓
+          </a>
+        </div>
       </header>
 
+      {/* ---------- 夥伴實績 ---------- */}
+      <section className="pb-12" data-print="hide">
+        <div className="rounded-3xl bg-card px-6 py-6 shadow-[0_1px_0_var(--line),0_12px_32px_-18px_rgb(59_42_34/0.25)] sm:px-8 sm:py-7">
+          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-7">
+            <span className="text-[44px]/none font-bold text-brand tabular-nums tracking-tight sm:text-[56px]">
+              5,000+
+            </span>
+            <span>
+              <strong className="block text-[17px]">
+                只是隨手分享連結，一天就帶來超過 NT$5,000 的銷售。
+              </strong>
+              <span className="mt-1 block text-sm text-ink-2">
+                2026 年 9 月 23 日，一位合作夥伴只是把專屬連結隨手分享出去，當天的銷售就超過
+                NT$5,000，光這一天就跨過了 15% 的級距門檻。
+              </span>
+            </span>
+          </div>
+          <div className="mt-5 flex items-center gap-3 border-t border-line pt-5">
+            <div className="flex shrink-0 -space-x-2.5">
+              {HERO_ICONS.map((id) => (
+                <Image
+                  key={id}
+                  src={`/apps/${id}.png`}
+                  alt=""
+                  width={40}
+                  height={40}
+                  className="size-10 rounded-[11px] ring-2 ring-card"
+                />
+              ))}
+            </div>
+            <span className="text-[13.5px] text-ink-2">
+              目前有 <strong className="text-ink">9 款 App</strong> 可以推薦
+            </span>
+          </div>
+        </div>
+        <p className="mt-3 px-1 text-[13px] text-ink-3">
+          壽司日檢在 2026 年 8 月高峰期間，也曾單日賣出 100 多筆。每個人的成效會因為受眾不同而有差異，以上僅供參考。
+        </p>
+      </section>
+
       {/* ---------- tiers ---------- */}
-      <section className="py-11" data-print="hide">
+      <section id="tiers" className="scroll-mt-6 py-11" data-print="hide">
         <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-balance">分潤級距</h2>
         <p className="mb-5 max-w-[46ch] text-ink-2">
           分潤比例會依照你當月的分潤基準金額來看，只要達到門檻，
@@ -121,7 +213,7 @@ export default function Home() {
           {TIER_ROWS.map((t) => (
             <li
               key={t.rate}
-              className="relative grid grid-cols-[1fr_auto] items-center gap-3.5 overflow-hidden rounded-xl border border-line bg-card px-4 py-3.5"
+              className="relative grid grid-cols-[1fr_auto] items-center gap-3.5 overflow-hidden rounded-2xl border border-line bg-card px-4 py-3.5"
             >
               <span
                 aria-hidden="true"
@@ -146,7 +238,7 @@ export default function Home() {
           ))}
         </ul>
 
-        <div className="mt-3.5 rounded-xl border border-line bg-card px-5 py-4">
+        <div className="mt-3.5 rounded-2xl border border-line bg-card px-5 py-4">
           <h3 className="mb-1.5 text-base font-semibold">全額套用，不是分段計算</h3>
           <p className="text-[14.5px] text-ink-2">
             舉例來說，如果當月基準金額是 NT$10,000，適用 25%，你就能拿到{' '}
@@ -155,6 +247,10 @@ export default function Home() {
           </p>
           <p className="mt-2 text-[14.5px] text-ink-2">
             級距是每個月重新計算的，這個月做到 20%，下個月會從 10% 重新開始算，提醒你留意一下。
+          </p>
+          <p className="mt-2 text-[14.5px] text-ink-2">
+            如果你同時推好幾款 App，<strong className="text-ink">每款 App 的級距是分開算的</strong>
+            ，不會合併在一起。
           </p>
         </div>
       </section>
@@ -168,22 +264,8 @@ export default function Home() {
 
         <EarningsCalculator />
 
-        {/* 實績 */}
-        <div className="mt-4 flex flex-col items-start gap-3 rounded-xl border border-line-2 border-l-4 border-l-brand bg-card px-5 py-4 sm:flex-row sm:items-center sm:gap-5">
-          <span className="text-[38px]/none font-bold text-brand tabular-nums tracking-tight sm:text-[46px]">
-            100
-          </span>
-          <span>
-            <strong className="block text-base">我們最高的那幾天，賣出了 100 多筆。</strong>
-            <span className="text-sm text-ink-2">
-              這是 2026 年 8 月 14–15 日高峰期間，壽司日檢單一內購項目的實際成交筆數，
-              同期 App 下載超過 2,300 次。市場的需求一直都在，只要曝光對了，量自然就會來。
-            </span>
-          </span>
-        </div>
-
         {/* 高低比較 */}
-        <div className="mt-4 rounded-xl border border-line bg-card px-5 py-5 sm:px-6">
+        <div className="mt-4 rounded-2xl border border-line bg-card px-5 py-5 sm:px-6">
           <h3 className="mb-1.5 text-[17px] font-semibold">這個比例算高還是低？</h3>
           <p className="mb-4 max-w-[54ch] text-[14.5px] text-ink-2">
             先跟你說明清楚一件事：你的分潤是從我們實際收到的金額來算的，不是從使用者付款的總額去算。
@@ -220,7 +302,7 @@ export default function Home() {
             所以沒有算進分潤基準裡面。
           </p>
 
-          <div className="mt-4 overflow-x-auto rounded-xl border border-line">
+          <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
             <table className="w-full border-collapse text-[14.5px]">
               <thead>
                 <tr>
@@ -283,6 +365,107 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ---------- 更多 App ---------- */}
+      <section className="border-t border-line py-11" data-print="hide">
+        <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-balance">
+          做出成績，你能推的不只一款
+        </h2>
+        <p className="mb-5 max-w-[46ch] text-ink-2">
+          先從一款 App 開始，等成效穩定了，可以再跟我們申請其他 App 的專屬連結。同一群受眾往往需要不只一款工具
+          ——<strong className="text-ink">你分享一次，就可能接住他們整段學習路上的需求。</strong>
+        </p>
+
+        <div className="flex flex-col gap-4">
+          {APP_GROUPS.map((g) => (
+            <div
+              key={g.audience}
+              className="rounded-3xl bg-card px-5 py-5 shadow-[0_1px_0_var(--line)] sm:px-6"
+            >
+              <h3 className="text-[17px] font-bold">{g.audience}</h3>
+              <p className="mb-4 text-[13px] text-ink-3">{g.hint}</p>
+              <ul className="grid grid-cols-1 gap-x-4 gap-y-3.5 sm:grid-cols-2">
+                {g.apps.map((a) => (
+                  <li key={a.id} className="flex items-center gap-3.5">
+                    <Image
+                      src={`/apps/${a.id}.png`}
+                      alt=""
+                      width={52}
+                      height={52}
+                      className={`size-13 shrink-0 rounded-[14px] ring-1 ring-line ${a.soon ? 'opacity-60' : ''}`}
+                    />
+                    <span className="min-w-0">
+                      <span className="flex items-center gap-2 text-[15px] font-bold">
+                        {a.name}
+                        {a.soon && (
+                          <span className="rounded-full bg-sunk px-2 py-0.5 text-[11px] font-bold text-ink-2">
+                            即將推出
+                          </span>
+                        )}
+                      </span>
+                      <span className="block text-[13px]/snug text-ink-2">{a.desc}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <p className="mt-4 text-[14.5px] text-ink-2">
+          每款 App 的分潤都是<strong className="text-ink">分開計算、各自認定級距</strong>的。想看每款 App
+          的詳細介紹，可以到{' '}
+          <a
+            href="https://p-talk-learning-map.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-brand underline underline-offset-2"
+          >
+            PTalk 學習地圖
+          </a>{' '}
+          看看。
+        </p>
+      </section>
+
+      {/* ---------- 加入 ---------- */}
+      <section
+        id="join"
+        className="my-6 scroll-mt-6 rounded-3xl bg-brand px-6 py-9 text-card sm:px-10"
+        data-print="hide"
+      >
+        <h2 className="mb-2 text-[26px]/snug font-bold tracking-tight text-balance">
+          想試試看嗎？跟我們說一聲就好
+        </h2>
+        <p className="mb-6 max-w-[42ch] text-[15.5px] opacity-90">
+          告訴我們你想推哪款 App、平常在哪裡分享就好。合約就在
+          <a href="#sign" className="font-bold underline underline-offset-2">頁面最下方</a>
+          ，簽好拍照回傳後，3 個工作日內就會給你專屬連結。
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <a
+            href="mailto:connect.ptalk@gmail.com?subject=%E6%88%91%E6%83%B3%E5%8A%A0%E5%85%A5%20PTalk%20%E5%90%88%E4%BD%9C%E5%A4%A5%E4%BC%B4"
+            className="rounded-full bg-card px-6 py-3 text-[15px] font-bold text-brand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-card"
+          >
+            寫信給我們
+          </a>
+          <a
+            href="https://www.threads.com/@ptalk.design"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full border-2 border-card/60 px-6 py-3 text-[15px] font-bold transition-colors hover:border-card focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-card"
+          >
+            Threads 私訊 @ptalk.design
+          </a>
+        </div>
+      </section>
+
+      {/* ---------- 細則分隔 ---------- */}
+      <div className="pt-14 pb-2" data-print="hide">
+        <p className="text-[13px] font-bold tracking-[0.12em] text-ink-3">合作細則</p>
+        <p className="mt-1 max-w-[46ch] text-[15px] text-ink-2">
+          以下是分潤怎麼算、什麼時候匯款，以及 Apple 平台的一些規則。加入前花幾分鐘看一下，之後合作會更順利。
+        </p>
+      </div>
+
       {/* ---------- 分潤基準金額 ---------- */}
       <section className="border-t border-line py-11" data-print="hide">
         <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-balance">
@@ -293,7 +476,7 @@ export default function Home() {
           來計算，不是使用者付款的總額喔，這個差異蠻重要的，先讓你了解一下。
         </p>
 
-        <div className="overflow-x-auto rounded-xl border border-line">
+        <div className="overflow-x-auto rounded-2xl border border-line">
           <table className="w-full border-collapse text-[14.5px]">
             <tbody>
               <tr>
@@ -322,7 +505,7 @@ export default function Home() {
           </table>
         </div>
 
-        <div className="mt-3.5 rounded-xl border border-line bg-card px-5 py-4">
+        <div className="mt-3.5 rounded-2xl border border-line bg-card px-5 py-4">
           <h3 className="mb-1.5 text-base font-semibold">為什麼扣掉這些</h3>
           <p className="text-[14.5px] text-ink-2">
             平台手續費跟各地稅金，是 <strong className="text-ink">Apple 直接扣掉</strong>
@@ -338,7 +521,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="mt-3.5 rounded-xl border border-line bg-card px-5 py-4">
+        <div className="mt-3.5 rounded-2xl border border-line bg-card px-5 py-4">
           <h3 className="mb-1.5 text-base font-semibold">實收率會變動</h3>
           <p className="text-[14.5px] text-ink-2">
             實收率目前大約是 <strong className="text-ink">{netPercent}%</strong>
@@ -360,7 +543,7 @@ export default function Home() {
         </p>
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <div className="rounded-xl border border-line bg-card px-4 py-4">
+          <div className="rounded-2xl border border-line bg-card px-4 py-4">
             <p className="mb-1.5 flex items-center gap-2 text-[15px] font-bold">
               <span aria-hidden="true" className="size-2 shrink-0 rounded-full bg-brand" />
               Apple App Store
@@ -369,7 +552,7 @@ export default function Home() {
               報表可以清楚看到每個連結各自帶來多少購買金額，所以能夠算出分潤。
             </p>
           </div>
-          <div className="rounded-xl border border-line bg-card px-4 py-4">
+          <div className="rounded-2xl border border-line bg-card px-4 py-4">
             <p className="mb-1.5 flex items-center gap-2 text-[15px] font-bold">
               <span aria-hidden="true" className="size-2 shrink-0 rounded-full bg-alert" />
               Google Play
@@ -385,8 +568,8 @@ export default function Home() {
           如果之後平台有開放訂單層級的歸因功能，我們會第一時間通知你，重新一起討論。
         </p>
 
-        <div className="my-4 rounded-xl border border-alert/30 bg-alert-2 px-5 py-4">
-          <p className="mb-1.5 text-xs font-bold tracking-[0.1em] text-alert uppercase">
+        <div className="my-4 rounded-2xl bg-sunk px-5 py-4">
+          <p className="mb-1.5 text-[13px] font-bold text-ink-2">
             請這樣分享
           </p>
           <p className="text-[14.5px]">
@@ -435,7 +618,7 @@ export default function Home() {
           ))}
         </ol>
 
-        <div className="mt-4 rounded-xl border border-line bg-card px-5 py-4">
+        <div className="mt-4 rounded-2xl border border-line bg-card px-5 py-4">
           <h3 className="mb-1.5 text-base font-semibold">匯款手續費</h3>
           <p className="text-[14.5px] text-ink-2">
             如果是<strong className="text-ink">台灣帳戶，手續費（含跨行）我們來負擔</strong>
@@ -483,7 +666,7 @@ export default function Home() {
         <p className="mb-4 max-w-[46ch] text-ink-2">
           這些行為可能會被平台判定成異常，連帶也會影響到當期的分潤，提醒你多注意。
         </p>
-        <ul className="overflow-hidden rounded-xl border border-line">
+        <ul className="overflow-hidden rounded-2xl border border-line">
           {AVOID.map((a) => (
             <li
               key={a}
