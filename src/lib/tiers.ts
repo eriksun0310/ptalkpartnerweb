@@ -20,8 +20,8 @@ export const TIERS: readonly Tier[] = [
   { min: 0, rate: 0.1 },
 ] as const;
 
-/** 試算用單價（壽司日檢內購 NT$90） */
-export const UNIT_PRICE = 90;
+/** 試算用單價（壽司日檢內購 NT$150） */
+export const UNIT_PRICE = 150;
 
 /**
  * 試算用實收率：扣除平台手續費與台灣營業稅後，開發者實收佔使用者付款的比例。

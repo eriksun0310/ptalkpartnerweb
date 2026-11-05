@@ -152,6 +152,8 @@ function DetailItem({
 export default function Home() {
   const netPercent = Math.round(NET_RATE * 100);
   const feeAndTax = UNIT_PRICE - Math.round(UNIT_PRICE * NET_RATE);
+  // 台灣營業稅 5% 為內含，故稅額為 售價 − 售價 ÷ 1.05
+  const vat = Math.round(UNIT_PRICE - UNIT_PRICE / 1.05);
 
   return (
     <div className="mx-auto max-w-[780px] px-5 pb-24">
@@ -426,7 +428,7 @@ export default function Home() {
             </p>
           </DetailItem>
 
-          <DetailItem title="分潤基準金額是什麼" teaser="用戶付 NT$90，我們實收約 NT$60">
+          <DetailItem title="分潤基準金額是什麼" teaser={`用戶付 NT$${UNIT_PRICE}，我們實收約 NT$${UNIT_PRICE - feeAndTax}`}>
             <p className="mb-4">
               分潤是用<strong className="text-ink">我們實際收到的金額</strong>
               來計算，不是使用者付款的總額喔，這個差異蠻重要的，先讓你了解一下。
@@ -442,12 +444,12 @@ export default function Home() {
               </tr>
               <tr>
                 <td className="border-b border-line px-4 py-2.5">− 台灣營業稅</td>
-                <td className="border-b border-line px-4 py-2.5 text-right tabular-nums">約 NT$4</td>
+                <td className="border-b border-line px-4 py-2.5 text-right tabular-nums">約 NT${vat}</td>
               </tr>
               <tr>
                 <td className="border-b border-line px-4 py-2.5">− Apple 平台手續費</td>
                 <td className="border-b border-line px-4 py-2.5 text-right tabular-nums">
-                  約 NT${feeAndTax - 4}
+                  約 NT${feeAndTax - vat}
                 </td>
               </tr>
               <tr>

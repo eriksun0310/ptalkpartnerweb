@@ -8,7 +8,7 @@ import { estimate, formatPercent, formatTwd, NET_RATE, UNIT_PRICE } from '@/lib/
  * 並提示距離下一階還差幾筆 —— 讓級距從「遙遠門檻」變成可行目標。
  */
 export function EarningsCalculator() {
-  const [qty, setQty] = useState(90);
+  const [qty, setQty] = useState(60);
   const result = useMemo(() => estimate(qty), [qty]);
 
   return (
